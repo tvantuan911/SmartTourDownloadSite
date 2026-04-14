@@ -1,138 +1,678 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SmartTour - Tai ung dung</title>
-  <style>
-    :root {
-      --bg-start: #052638;
-      --bg-end: #0e4f72;
-      --card: rgba(255,255,255,.96);
-      --text: #0a2230;
-      --muted: #6d7f8b;
-      --accent: #1aa0f2;
-      --accent-pressed: #1186cc;
-    }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light only" />
+        <title>SmartTour - Tai ung dung</title>
+        <style>
+            :root {
+                --bg-top: #eff7fd;
+                --bg-bottom: #dfeef9;
+                --surface: rgba(255, 255, 255, 0.94);
+                --surface-border: rgba(14, 165, 233, 0.16);
+                --surface-shadow: 0 30px 70px rgba(2, 132, 199, 0.14);
+                --text-primary: #08263b;
+                --text-secondary: #527083;
+                --accent: #0ea5e9;
+                --accent-strong: #0284c7;
+                --accent-teal: #14b8a6;
+                --accent-soft: rgba(14, 165, 233, 0.12);
+                --line: rgba(2, 132, 199, 0.12);
+                --page-max: 1080px;
+                --card-max: 430px;
+                --radius-xl: 30px;
+                --radius-lg: 22px;
+                --radius-md: 16px;
+                --radius-sm: 999px;
+                --font-stack: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            }
 
-    * { box-sizing: border-box; }
+            * {
+                box-sizing: border-box;
+            }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.1), transparent 34%),
-        linear-gradient(180deg, var(--bg-start), var(--bg-end));
-      display: grid;
-      place-items: center;
-      padding: 24px;
-    }
+            html,
+            body {
+                margin: 0;
+                min-height: 100%;
+                font-family: var(--font-stack);
+                background:
+                    radial-gradient(
+                        circle at top left,
+                        rgba(14, 165, 233, 0.1),
+                        transparent 32%
+                    ),
+                    radial-gradient(
+                        circle at 100% 15%,
+                        rgba(56, 189, 248, 0.14),
+                        transparent 26%
+                    ),
+                    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+                color: var(--text-primary);
+            }
 
-    .card {
-      width: min(100%, 440px);
-      background: var(--card);
-      border-radius: 28px;
-      padding: 28px 24px;
-      box-shadow: 0 24px 60px rgba(2,18,28,.28);
-      text-align: center;
-    }
+            body {
+                position: relative;
+                overflow-x: hidden;
+            }
 
-    .badge {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #1cc4ff, #1190e8);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-size: 34px;
-      font-weight: 700;
-    }
+            body::before,
+            body::after {
+                content: "";
+                position: fixed;
+                z-index: 0;
+                pointer-events: none;
+                border-radius: 999px;
+                filter: blur(2px);
+            }
 
-    h1 {
-      margin: 0;
-      font-size: 31px;
-      line-height: 1.15;
-    }
+            body::before {
+                top: -90px;
+                right: -110px;
+                width: 280px;
+                height: 280px;
+                background: radial-gradient(
+                    circle,
+                    rgba(14, 165, 233, 0.18),
+                    transparent 68%
+                );
+            }
 
-    .subtitle {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.6;
-    }
+            body::after {
+                bottom: -120px;
+                left: -90px;
+                width: 260px;
+                height: 260px;
+                background: radial-gradient(
+                    circle,
+                    rgba(20, 184, 166, 0.12),
+                    transparent 66%
+                );
+            }
 
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 24px;
-      width: 100%;
-      min-height: 58px;
-      border: 0;
-      border-radius: 18px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      font-weight: 700;
-      transition: transform 160ms ease, background 160ms ease;
-    }
+            .shell {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                width: 100%;
+                max-width: var(--page-max);
+                margin: 0 auto;
+                padding: 18px 16px 28px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
 
-    .cta:active {
-      transform: translateY(1px) scale(.995);
-      background: var(--accent-pressed);
-    }
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                margin-bottom: 18px;
+            }
 
-    .steps {
-      margin: 22px 0 0;
-      padding: 18px;
-      border-radius: 20px;
-      background: #eef7fd;
-      text-align: left;
-    }
+            .lang-toggle {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px;
+                border-radius: var(--radius-sm);
+                border: 1px solid rgba(255, 255, 255, 0.65);
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(14px);
+                box-shadow: 0 14px 26px rgba(14, 98, 144, 0.08);
+            }
 
-    .steps p {
-      margin: 0 0 10px;
-      font-size: 14px;
-    }
+            .lang-option {
+                border: 0;
+                min-width: 44px;
+                padding: 8px 10px;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                color: var(--text-secondary);
+                font-size: 0.8rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                cursor: pointer;
+                transition:
+                    background-color 160ms ease,
+                    color 160ms ease,
+                    transform 160ms ease;
+            }
 
-    .steps p:last-child {
-      margin-bottom: 0;
-    }
+            .lang-option:hover,
+            .lang-option:focus-visible {
+                transform: translateY(-1px);
+                outline: none;
+            }
 
-    .hint {
-      margin: 16px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-  </style>
-</head>
-<body>
-  <main class="card">
-    <div class="badge">S</div>
-    <h1>SmartTour</h1>
-    <p class="subtitle">
-      Ung dung Android da san sang tai xuong. Bam vao nut ben duoi de tai APK.
-    </p>
+            .lang-option.is-active {
+                background: linear-gradient(
+                    180deg,
+                    var(--accent),
+                    var(--accent-strong)
+                );
+                color: #ffffff;
+                box-shadow: 0 8px 18px rgba(14, 165, 233, 0.24);
+            }
 
-    <a class="cta" href="PASTE_APK_URL_HERE">
-      Tai ung dung
-    </a>
+            .hero {
+                display: grid;
+                gap: 20px;
+                justify-items: center;
+            }
 
-    <div class="steps">
-      <p>1. Bam tai app.</p>
-      <p>2. Mo file APK sau khi tai xong.</p>
-      <p>3. Neu Android can, hay cho phep cai dat tu nguon ben ngoai.</p>
-    </div>
+            .card.is-language-switching [data-i18n],
+            .bottom-note.is-language-switching {
+                opacity: 0;
+                transform: translateY(8px);
+            }
 
-    <p class="hint">
-      Trang nay duoc dung de tai ban Android cua SmartTour.
-    </p>
-  </main>
-</body>
+            [data-i18n],
+            .bottom-note {
+                transition:
+                    opacity 180ms ease,
+                    transform 220ms ease;
+                will-change: opacity, transform;
+            }
+
+            .card {
+                width: min(100%, var(--card-max));
+                padding: 28px 22px 24px;
+                border-radius: var(--radius-xl);
+                border: 1px solid var(--surface-border);
+                background: var(--surface);
+                box-shadow: var(--surface-shadow);
+                backdrop-filter: blur(18px);
+            }
+
+            .logo-wrap {
+                width: 82px;
+                height: 82px;
+                margin: 0 auto 18px;
+                border-radius: 24px;
+                overflow: hidden;
+                box-shadow: 0 16px 30px rgba(14, 165, 233, 0.22);
+                background: #ffffff;
+            }
+
+            .logo-wrap img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+            }
+
+            .title {
+                margin: 0;
+                text-align: center;
+                font-size: clamp(2rem, 6vw, 2.4rem);
+                line-height: 1.06;
+                letter-spacing: -0.04em;
+                font-weight: 800;
+            }
+
+            .subtitle {
+                margin: 12px auto 0;
+                max-width: 320px;
+                text-align: center;
+                color: var(--text-secondary);
+                font-size: 1rem;
+                line-height: 1.7;
+            }
+
+            .download-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+                min-height: 58px;
+                margin-top: 24px;
+                padding: 14px 20px;
+                border: 0;
+                border-radius: 18px;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent),
+                    var(--accent-teal)
+                );
+                color: #ffffff;
+                text-decoration: none;
+                font-size: 1.06rem;
+                font-weight: 800;
+                box-shadow: 0 16px 28px rgba(14, 165, 233, 0.22);
+                transition:
+                    transform 160ms ease,
+                    box-shadow 160ms ease,
+                    filter 160ms ease;
+            }
+
+            .download-button:hover,
+            .download-button:focus-visible {
+                transform: translateY(-1px);
+                box-shadow: 0 22px 34px rgba(14, 165, 233, 0.26);
+                filter: saturate(1.05);
+                outline: none;
+            }
+
+            .download-button:active {
+                transform: translateY(1px) scale(0.995);
+            }
+
+            .download-button.is-disabled {
+                opacity: 0.72;
+                cursor: not-allowed;
+            }
+
+            .helper {
+                margin: 12px 0 0;
+                text-align: center;
+                color: var(--text-secondary);
+                font-size: 0.92rem;
+                line-height: 1.6;
+            }
+
+            .section-divider {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                margin: 24px 0 18px;
+                color: var(--text-secondary);
+                font-size: 0.88rem;
+                font-weight: 700;
+            }
+
+            .section-divider::before,
+            .section-divider::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--line);
+            }
+
+            .steps {
+                display: grid;
+                gap: 16px;
+            }
+
+            .step {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 12px;
+                align-items: start;
+            }
+
+            .step-index {
+                width: 26px;
+                height: 26px;
+                display: inline-grid;
+                place-items: center;
+                border-radius: 50%;
+                background: var(--accent-soft);
+                color: var(--accent-strong);
+                font-size: 0.84rem;
+                font-weight: 800;
+                flex-shrink: 0;
+                margin-top: 2px;
+            }
+
+            .step-title {
+                margin: 0;
+                font-size: 0.98rem;
+                font-weight: 800;
+                line-height: 1.45;
+            }
+
+            .step-text {
+                margin: 4px 0 0;
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+                line-height: 1.58;
+            }
+
+            .footer {
+                margin-top: 22px;
+                padding-top: 18px;
+                border-top: 1px solid var(--line);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px 14px;
+                color: var(--text-secondary);
+                font-size: 0.88rem;
+            }
+
+            .pill {
+                padding: 8px 12px;
+                border-radius: var(--radius-sm);
+                background: linear-gradient(
+                    180deg,
+                    rgba(235, 245, 255, 0.96),
+                    rgba(247, 251, 255, 0.98)
+                );
+                border: 1px solid rgba(14, 165, 233, 0.22);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                    0 8px 18px rgba(2, 132, 199, 0.08);
+                color: #33566c;
+            }
+
+            .bottom-note {
+                width: min(100%, var(--card-max));
+                margin-top: 10px;
+                padding: 0 8px;
+                text-align: center;
+                color: rgba(8, 38, 59, 0.58);
+                font-size: 0.82rem;
+                line-height: 1.5;
+            }
+
+            @media (min-width: 720px) {
+                .shell {
+                    padding: 26px 26px 36px;
+                }
+
+                .topbar {
+                    margin-bottom: 24px;
+                }
+
+                .card {
+                    padding: 34px 30px 28px;
+                }
+            }
+
+            @media (max-width: 420px) {
+                .shell {
+                    padding-inline: 12px;
+                }
+
+                .card {
+                    padding-inline: 18px;
+                }
+
+                .download-button {
+                    min-height: 54px;
+                    font-size: 1rem;
+                }
+
+                .lang-option {
+                    min-width: 40px;
+                    padding: 7px 9px;
+                    font-size: 0.76rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="shell">
+            <div class="topbar">
+                <div
+                    class="lang-toggle"
+                    role="group"
+                    aria-label="Language toggle"
+                >
+                    <button
+                        class="lang-option is-active"
+                        type="button"
+                        data-lang-option="vi"
+                    >
+                        VI
+                    </button>
+                    <button
+                        class="lang-option"
+                        type="button"
+                        data-lang-option="en"
+                    >
+                        EN
+                    </button>
+                </div>
+            </div>
+
+            <section class="hero">
+                <article class="card">
+                    <div class="logo-wrap">
+                        <img src="./assets/appicon.jpg" alt="SmartTour logo" />
+                    </div>
+
+                    <h1 class="title" data-i18n="title">SmartTour</h1>
+                    <p class="subtitle" data-i18n="subtitle">
+                        Thuyet minh tu dong pho am thuc Vinh Khanh va trai
+                        nghiem kham pha tien loi ngay tren dien thoai.
+                    </p>
+
+                    <a
+                        id="downloadButton"
+                        class="download-button is-disabled"
+                        href="#"
+                        aria-disabled="true"
+                    >
+                        <span data-i18n="downloadCta">Tai ung dung (APK)</span>
+                    </a>
+
+                    <p class="helper" data-i18n="helper">
+                        Link APK chua duoc cau hinh. Chi can thay bien APK_URL
+                        trong file index.html la nut se hoat dong.
+                    </p>
+
+                    <div class="section-divider" data-i18n="guideTitle">
+                        Huong dan cai dat
+                    </div>
+
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-index">1</div>
+                            <div>
+                                <p class="step-title" data-i18n="step1Title">
+                                    Tai file APK
+                                </p>
+                                <p class="step-text" data-i18n="step1Text">
+                                    Bam vao nut tai ung dung. Tep se duoc luu
+                                    trong thu muc Downloads tren dien thoai.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-index">2</div>
+                            <div>
+                                <p class="step-title" data-i18n="step2Title">
+                                    Cho phep cai dat tu nguon ngoai
+                                </p>
+                                <p class="step-text" data-i18n="step2Text">
+                                    Neu Android can xac nhan, hay bat quyen cai
+                                    dat ung dung tu nguon khong ro.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-index">3</div>
+                            <div>
+                                <p class="step-title" data-i18n="step3Title">
+                                    Mo APK va cai dat
+                                </p>
+                                <p class="step-text" data-i18n="step3Text">
+                                    Sau khi cai xong, mo SmartTour de bat dau
+                                    kham pha, nghe audio va trai nghiem ban do.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <span class="pill" data-i18n="tagAndroid"
+                            >Chi ho tro Android</span
+                        >
+                        <span class="pill" data-i18n="tagFree"
+                            >Ban tai mien phi</span
+                        >
+                        <span class="pill" data-i18n="tagNoAds"
+                            >Khong quang cao</span
+                        >
+                    </div>
+                </article>
+
+            </section>
+        </main>
+
+        <script>
+            const APK_URL =
+                "https://3mnbkhidl5xrpllc.public.blob.vercel-storage.com/SmartTour.apk";
+
+            const translations = {
+                vi: {
+                    title: "SmartTour",
+                    subtitle:
+                        "Thuyết minh tự động phố ẩm thực Vĩnh Khánh và trải nghiệm khám phá tiện lợi ngay trên điện thoại.",
+                    downloadCta: "Tải ứng dụng (APK)",
+                    helper: "Link APK chưa được cấu hình. Chỉ cần thay biến APK_URL trong file index.html là nút sẽ hoạt động.",
+                    guideTitle: "Hướng dẫn cài đặt",
+                    step1Title: "Tải file APK",
+                    step1Text:
+                        "Bấm vào nút tải ứng dụng. Tệp sẽ được lưu trong thư mục Downloads trên điện thoại.",
+                    step2Title: "Cho phép cài từ nguồn ngoài",
+                    step2Text:
+                        "Nếu Android cần xác nhận, hãy bật quyền cài đặt ứng dụng từ nguồn không rõ.",
+                    step3Title: "Mở APK và cài đặt",
+                    step3Text:
+                        "Sau khi cài xong, mở SmartTour để bắt đầu khám phá, nghe audio và trải nghiệm bản đồ.",
+                    tagAndroid: "Chỉ hỗ trợ Android",
+                    tagFree: "Bản tải miễn phí",
+                    tagNoAds: "Không quảng cáo",
+                },
+                en: {
+                    title: "SmartTour",
+                    subtitle:
+                        "Automatic audio storytelling for Vinh Khanh food street with a simple, mobile-friendly explore experience.",
+                    downloadCta: "Download App (APK)",
+                    helper: "The APK link is not configured yet. Replace the APK_URL value in index.html and the button will work.",
+                    guideTitle: "Installation Guide",
+                    step1Title: "Download the APK",
+                    step1Text:
+                        "Tap the download button. The file will be saved to the Downloads folder on your phone.",
+                    step2Title: "Allow installs from unknown sources",
+                    step2Text:
+                        "If Android asks for confirmation, enable permission to install apps from unknown sources.",
+                    step3Title: "Open the APK and install",
+                    step3Text:
+                        "After installation, open SmartTour to start exploring, listening to audio, and using the map.",
+                    tagAndroid: "Android only",
+                    tagFree: "Free download",
+                    tagNoAds: "No ads",
+                },
+            };
+
+            const storedLanguage = window.localStorage.getItem(
+                "smarttour-download-lang",
+            );
+            const browserLanguage =
+                navigator.language &&
+                navigator.language.toLowerCase().startsWith("vi")
+                    ? "vi"
+                    : "en";
+            let currentLanguage = storedLanguage || browserLanguage || "vi";
+
+            const textNodes = document.querySelectorAll("[data-i18n]");
+            const languageButtons =
+                document.querySelectorAll("[data-lang-option]");
+            const downloadButton = document.getElementById("downloadButton");
+            const helperText = document.querySelector("[data-i18n='helper']");
+            const card = document.querySelector(".card");
+            let languageAnimationTimer = null;
+
+            function isConfiguredApkUrl() {
+                return (
+                    APK_URL &&
+                    APK_URL !== "PASTE_APK_URL_HERE" &&
+                    APK_URL !== "#"
+                );
+            }
+
+            function renderLanguage(language) {
+                const dictionary = translations[language] || translations.vi;
+                currentLanguage = language;
+                document.documentElement.lang = language;
+
+                textNodes.forEach((node) => {
+                    const key = node.getAttribute("data-i18n");
+                    if (dictionary[key]) {
+                        node.textContent = dictionary[key];
+                    }
+                });
+
+                languageButtons.forEach((button) => {
+                    const isActive =
+                        button.getAttribute("data-lang-option") === language;
+                    button.classList.toggle("is-active", isActive);
+                    button.setAttribute(
+                        "aria-pressed",
+                        isActive ? "true" : "false",
+                    );
+                });
+
+                window.localStorage.setItem(
+                    "smarttour-download-lang",
+                    language,
+                );
+                document.title =
+                    language === "vi"
+                        ? "SmartTour - Tải ứng dụng"
+                        : "SmartTour - Download App";
+            }
+
+            function applyLanguage(language) {
+                const targetLanguage = translations[language] ? language : "vi";
+
+                if (languageAnimationTimer) {
+                    window.clearTimeout(languageAnimationTimer);
+                    languageAnimationTimer = null;
+                }
+
+                if (card) {
+                    card.classList.add("is-language-switching");
+                }
+
+                languageAnimationTimer = window.setTimeout(() => {
+                    renderLanguage(targetLanguage);
+
+                    requestAnimationFrame(() => {
+                        if (card) {
+                            card.classList.remove("is-language-switching");
+                        }
+                    });
+                }, 110);
+            }
+
+            function applyApkState() {
+                if (isConfiguredApkUrl()) {
+                    downloadButton.href = APK_URL;
+                    downloadButton.classList.remove("is-disabled");
+                    downloadButton.removeAttribute("aria-disabled");
+                    helperText.style.display = "none";
+                } else {
+                    downloadButton.href = "#";
+                    downloadButton.classList.add("is-disabled");
+                    downloadButton.setAttribute("aria-disabled", "true");
+                }
+            }
+
+            languageButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const language =
+                        button.getAttribute("data-lang-option") || "vi";
+                    applyLanguage(language);
+                });
+            });
+
+            downloadButton.addEventListener("click", (event) => {
+                if (!isConfiguredApkUrl()) {
+                    event.preventDefault();
+                }
+            });
+
+            renderLanguage(currentLanguage);
+            applyApkState();
+        </script>
+    </body>
 </html>
