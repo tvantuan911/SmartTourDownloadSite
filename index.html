@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartTour - Tai ung dung</title>
+  <style>
+    :root {
+      --bg-start: #052638;
+      --bg-end: #0e4f72;
+      --card: rgba(255,255,255,.96);
+      --text: #0a2230;
+      --muted: #6d7f8b;
+      --accent: #1aa0f2;
+      --accent-pressed: #1186cc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.1), transparent 34%),
+        linear-gradient(180deg, var(--bg-start), var(--bg-end));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(100%, 440px);
+      background: var(--card);
+      border-radius: 28px;
+      padding: 28px 24px;
+      box-shadow: 0 24px 60px rgba(2,18,28,.28);
+      text-align: center;
+    }
+
+    .badge {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #1cc4ff, #1190e8);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 31px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 18px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .cta:active {
+      transform: translateY(1px) scale(.995);
+      background: var(--accent-pressed);
+    }
+
+    .steps {
+      margin: 22px 0 0;
+      padding: 18px;
+      border-radius: 20px;
+      background: #eef7fd;
+      text-align: left;
+    }
+
+    .steps p {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .steps p:last-child {
+      margin-bottom: 0;
+    }
+
+    .hint {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">S</div>
+    <h1>SmartTour</h1>
+    <p class="subtitle">
+      Ung dung Android da san sang tai xuong. Bam vao nut ben duoi de tai APK.
+    </p>
+
+    <a class="cta" href="PASTE_APK_URL_HERE">
+      Tai ung dung
+    </a>
+
+    <div class="steps">
+      <p>1. Bam tai app.</p>
+      <p>2. Mo file APK sau khi tai xong.</p>
+      <p>3. Neu Android can, hay cho phep cai dat tu nguon ben ngoai.</p>
+    </div>
+
+    <p class="hint">
+      Trang nay duoc dung de tai ban Android cua SmartTour.
+    </p>
+  </main>
+</body>
+</html>
